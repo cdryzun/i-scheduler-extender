@@ -1,6 +1,7 @@
 package extender
 
 import (
+	"fmt"
 	v1 "k8s.io/api/core/v1"
 	extenderv1 "k8s.io/kube-scheduler/extender/v1"
 	"sort"
@@ -18,6 +19,11 @@ func (ex *Extender) Filter(args extenderv1.ExtenderArgs) *extenderv1.ExtenderFil
 		}
 		nodes = append(nodes, node)
 		nodeNames = append(nodeNames, node.Name)
+	}
+
+	// 没有满足条件的节点就报错
+	if len(nodes) == 0 {
+		return &extenderv1.ExtenderFilterResult{Error: fmt.Errorf("all node do not have label %s", Label).Error()}
 	}
 
 	args.Nodes.Items = nodes
@@ -42,7 +48,10 @@ func (ex *Extender) FilterOnlyOne(args extenderv1.ExtenderArgs) *extenderv1.Exte
 		score := ComputeScore(node)
 		nodeScores.NodeList = append(nodeScores.NodeList, &NodeScore{Node: node, Score: score})
 	}
-
+	// 没有满足条件的节点就报错
+	if len(nodeScores.NodeList) == 0 {
+		return &extenderv1.ExtenderFilterResult{Error: fmt.Errorf("all node do not have label %s", Label).Error()}
+	}
 	// 排序
 	sort.Sort(nodeScores)
 	// 然后取最后一个，即得分最高的节点，这样由于 Filter 只返回了一个节点，因此最终肯定会调度到该节点上
