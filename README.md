@@ -10,7 +10,7 @@
 * 2）打分阶段：直接将节点上  Label `priority.lixueduan.com` 的值作为得分
   * 比如某节点携带 Label `priority.lixueduan.com=50` 则打分阶段该节点则是 50 分
 
-Scheduler Extender 系列完整内容见：[K8s 自定义调度器 Part1：通过 Scheduler Extender 实现自定义调度逻辑](https://www.lixueduan.com)
+Scheduler Extender 系列完整内容见：[K8s 自定义调度器 Part1：通过 Scheduler Extender 实现自定义调度逻辑](https://www.lixueduan.com/posts/kubernetes/30-custom-scheduker-by-scheduler-extender/)
 
 
 ## 微信公众号：探索云原生
