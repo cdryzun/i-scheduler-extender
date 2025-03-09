@@ -2,10 +2,11 @@ package server
 
 import (
 	"encoding/json"
+	"net/http"
+
 	"github.com/lixd96/i-scheduler-extender/pkg/extender"
 	"k8s.io/klog/v2"
 	extenderv1 "k8s.io/kube-scheduler/extender/v1"
-	"net/http"
 )
 
 type Handler struct {
@@ -17,6 +18,8 @@ func NewHandler(ex *extender.Extender) *Handler {
 }
 
 func (h *Handler) Filter(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -42,6 +45,8 @@ func (h *Handler) Filter(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) FilterOnlyOne(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -67,6 +72,8 @@ func (h *Handler) FilterOnlyOne(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Prioritize(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -90,6 +97,8 @@ func (h *Handler) Prioritize(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Bind(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
