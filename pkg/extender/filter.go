@@ -2,16 +2,23 @@ package extender
 
 import (
 	"fmt"
+	"sort"
+
 	v1 "k8s.io/api/core/v1"
 	extenderv1 "k8s.io/kube-scheduler/extender/v1"
-	"sort"
 )
 
 // Filter 过滤掉不满足条件的节点
 func (ex *Extender) Filter(args extenderv1.ExtenderArgs) *extenderv1.ExtenderFilterResult {
+	// 检查 args.Nodes 是否为 nil
+	if args.Nodes == nil {
+		return &extenderv1.ExtenderFilterResult{
+			Error: "nodes is nil in extender args",
+		}
+	}
+
 	nodes := make([]v1.Node, 0)
 	nodeNames := make([]string, 0)
-
 	for _, node := range args.Nodes.Items {
 		_, ok := node.Labels[Label]
 		if !ok { // 排除掉不带指定标签的节点
@@ -36,6 +43,12 @@ func (ex *Extender) Filter(args extenderv1.ExtenderArgs) *extenderv1.ExtenderFil
 
 // FilterOnlyOne 过滤掉不满足条件的节点,并将其余节点打分排序，最终只返回得分最高的节点以实现完全控制调度结果
 func (ex *Extender) FilterOnlyOne(args extenderv1.ExtenderArgs) *extenderv1.ExtenderFilterResult {
+	// 检查 args.Nodes 是否为 nil
+	if args.Nodes == nil {
+		return &extenderv1.ExtenderFilterResult{
+			Error: "nodes is nil in extender args",
+		}
+	}
 	// 过滤掉不满足条件的节点
 	nodeScores := &NodeScoreList{NodeList: make([]*NodeScore, 0)}
 
