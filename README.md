@@ -205,7 +205,7 @@ data:
       prioritizeVerb: "prioritize"
       bindVerb: "bind"
       weight: 1
-      nodeCacheCapable: true
+      nodeCacheCapable: false
 ```
 
 修改点：
